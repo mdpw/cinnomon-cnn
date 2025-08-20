@@ -4,9 +4,9 @@ import torch
 import os
 
 # Import your model class
-from backend.models.model import ANN
+from backend.model import ANN
 from backend.src.utils import *
-from training.preprocess import preprocess_input
+from backend.preprocessing import preprocess_input
 
 app = FastAPI(title="Model Prediction API")
 

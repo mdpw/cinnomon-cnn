@@ -1,13 +1,7 @@
 import torch.nn as nn
-from training.preprocess import X_train_tensor, le
-
-# --- 2. ANN Model with Dropout ---
-input_size = X_train_tensor.shape[1]
-hidden_size = 64
-output_size = len(le.classes_)
 
 class ANN(nn.Module):
-    def __init__(self):
+    def __init__(self, input_size, hidden_size, output_size):
         super(ANN, self).__init__()
         self.fc1 = nn.Linear(input_size, hidden_size)
         self.relu1 = nn.ReLU()
@@ -26,4 +20,3 @@ class ANN(nn.Module):
         x = self.dropout2(x)
         x = self.fc3(x)
         return x
-

@@ -5,12 +5,12 @@ from sklearn.model_selection import train_test_split
 import pandas as pd
 import os
 
-# Get the path to the project root (cinnomon-cnn)
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+# Dataset path
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '.'))
 file_path = os.path.join(project_root, 'dataset', 'processed', 'modified_cinnamon_quality_dataset.csv')
 
 # -----------------------
-# Full dataset preprocessing (for training)
+# Load and preprocess dataset
 # -----------------------
 df = pd.read_csv(file_path)
 df = df.drop(columns=['Sample_ID'])
@@ -48,18 +48,17 @@ val_loader = DataLoader(TensorDataset(X_val_tensor, y_val_tensor), batch_size=ba
 test_loader = DataLoader(TensorDataset(X_test_tensor, y_test_tensor), batch_size=batch_size, shuffle=False)
 
 # -----------------------
-# Helper for API inference
+# Helper function for API inference
 # -----------------------
 def preprocess_input(features):
     """
     Preprocess a single API request.
-    features: list of raw numerical features
+    features: list of numerical features
     """
-    features_scaled = scaler.transform([features])   # scale same as training
+    features_scaled = scaler.transform([features])
     input_tensor = torch.tensor(features_scaled, dtype=torch.float32)
     return input_tensor
 
-# Exported symbols
 __all__ = [
     'X_train_tensor', 'y_train_tensor',
     'X_val_tensor', 'y_val_tensor',
