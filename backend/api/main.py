@@ -1,21 +1,31 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import torch
-from model import YourModelClass
+import os
+
+# Import your model class
+from backend.models.model import ANN
 from backend.src.utils import *
 from training.preprocess import preprocess_input
 
 app = FastAPI(title="Model Prediction API")
 
-# Load model at startup
-MODEL_PATH = "models/best_model.pth"
-model = YourModelClass()
+# --------------------------------------------------------------------
+# Fix: Always resolve model path relative to project root
+# --------------------------------------------------------------------
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+MODEL_PATH = os.path.join(BASE_DIR, "models", "best_model.pth")
+
+# Load model
+model = ANN()
 model.load_state_dict(torch.load(MODEL_PATH, map_location=torch.device("cpu")))
 model.eval()
 
+# Request schema
 class PredictionRequest(BaseModel):
     features: list
 
+# Prediction endpoint
 @app.post("/predict")
 def predict(request: PredictionRequest):
     input_tensor = preprocess_input(request.features)

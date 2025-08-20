@@ -7,7 +7,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import torch
 import pandas as pd
-from training.model import *
+from backend.models.model import *
 from training.preprocess import le, scaler
 
 def predict_quality(

@@ -1,24 +1,18 @@
 import torch
-import torch.nn as nn
-import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import confusion_matrix, classification_report
 import pandas as pd
-
 import os
-import pandas as pd
 
 # Get the path to the project root (cinnomon-cnn)
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-
-# Build full path to the CSV file
 file_path = os.path.join(project_root, 'dataset', 'processed', 'modified_cinnamon_quality_dataset.csv')
 
+# -----------------------
+# Full dataset preprocessing (for training)
+# -----------------------
 df = pd.read_csv(file_path)
-
-# Data Preparation
 df = df.drop(columns=['Sample_ID'])
 X = df.drop(columns=['Quality_Label'])
 y = df['Quality_Label']
@@ -53,5 +47,24 @@ train_loader = DataLoader(TensorDataset(X_train_tensor, y_train_tensor), batch_s
 val_loader = DataLoader(TensorDataset(X_val_tensor, y_val_tensor), batch_size=batch_size, shuffle=False)
 test_loader = DataLoader(TensorDataset(X_test_tensor, y_test_tensor), batch_size=batch_size, shuffle=False)
 
-# Export tensors
-__all__ = ['X_train_tensor', 'y_train_tensor', 'X_val', 'y_val', 'X_test', 'y_test', 'train_loader', 'val_loader', 'test_loader','le', 'y_test_enc', 'X_test_tensor','X_test_scaled','scaler']
+# -----------------------
+# Helper for API inference
+# -----------------------
+def preprocess_input(features):
+    """
+    Preprocess a single API request.
+    features: list of raw numerical features
+    """
+    features_scaled = scaler.transform([features])   # scale same as training
+    input_tensor = torch.tensor(features_scaled, dtype=torch.float32)
+    return input_tensor
+
+# Exported symbols
+__all__ = [
+    'X_train_tensor', 'y_train_tensor',
+    'X_val_tensor', 'y_val_tensor',
+    'X_test_tensor', 'y_test_tensor',
+    'train_loader', 'val_loader', 'test_loader',
+    'le', 'y_test_enc', 'X_test_scaled', 'scaler',
+    'preprocess_input'
+]

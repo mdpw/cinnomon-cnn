@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 from sklearn.preprocessing import StandardScaler, LabelEncoder
-from training.model import *
+from backend.models.model import *
 from backend.src.utils import *
 from training.preprocess import *
 from training.preprocess import X_train_tensor, le, y_test_enc, X_test_tensor,X_test_scaled, scaler
