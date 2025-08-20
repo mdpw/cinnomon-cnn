@@ -5,8 +5,10 @@ from sklearn.model_selection import train_test_split
 import pandas as pd
 import os
 
-# Dataset path
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '.'))
+# -----------------------
+# Dataset path (root/dataset/processed)
+# -----------------------
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 file_path = os.path.join(project_root, 'dataset', 'processed', 'modified_cinnamon_quality_dataset.csv')
 
 # -----------------------
@@ -47,9 +49,7 @@ train_loader = DataLoader(TensorDataset(X_train_tensor, y_train_tensor), batch_s
 val_loader = DataLoader(TensorDataset(X_val_tensor, y_val_tensor), batch_size=batch_size, shuffle=False)
 test_loader = DataLoader(TensorDataset(X_test_tensor, y_test_tensor), batch_size=batch_size, shuffle=False)
 
-# -----------------------
 # Helper function for API inference
-# -----------------------
 def preprocess_input(features):
     """
     Preprocess a single API request.

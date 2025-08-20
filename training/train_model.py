@@ -14,8 +14,12 @@ from backend.preprocessing import *
 from backend.preprocessing import X_train_tensor, le, y_test_enc, X_test_tensor,X_test_scaled, scaler
 import os
 
-# Recreate the model architecture
-model = ANN()  # Same as used during training
+# Hyperparameters & Setup
+input_size = X_train_tensor.shape[1]
+hidden_size = 64
+output_size = len(le.classes_)
+
+model = ANN(input_size=input_size, hidden_size=hidden_size, output_size=output_size)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-4)
 scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=3)
@@ -29,15 +33,15 @@ best_val_loss = float('inf')
 patience = 5
 counter = 0
 
-# Ensure the folder exists
+# Ensure backend/model exists
 model_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../backend/models'))
 os.makedirs(model_dir, exist_ok=True)
 
 # Set the model path
 model_path = os.path.join(model_dir, "best_model.pth")
 
+# Training loop with early stopping
 for epoch in range(num_epochs):
-    # Training
     model.train()
     running_loss, correct, total = 0.0, 0, 0
     for inputs, labels in train_loader:
@@ -91,6 +95,8 @@ for epoch in range(num_epochs):
             print(f"Early stopping at epoch {epoch+1}")
             break
 
-# Export variables
+print(f"Training complete. Best model saved to: {model_path}")
+
+# Export metrics for reference
 __all__ = ['train_losses', 'val_losses', 'train_accuracies', 'val_accuracies']
 
